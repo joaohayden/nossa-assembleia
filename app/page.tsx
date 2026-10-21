@@ -1,9 +1,8 @@
 'use client';
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import { ThumbsUp, ThumbsDown, Building2, CircleHelp, Lightbulb, LoaderCircle, Plus, Search, Sparkles, X, Heart, Users, CheckCircle, PartyPopper } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, Building2, CircleHelp, Lightbulb, LoaderCircle, Plus, Search, Sparkles, X, Heart, Users, PartyPopper } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, doc, onSnapshot, setDoc, updateDoc, increment, query as firestoreQuery, orderBy } from 'firebase/firestore';
-import { demoProposals } from '@/lib/demo';
 import { categories, statuses, visibleProposals, isNewProposal } from '@/lib/domain.mjs';
 import type { Proposal } from '@/lib/types';
 
@@ -94,7 +93,6 @@ export default function Home() {
     const q = firestoreQuery(collection(db, 'proposals'), orderBy('createdAt', 'desc'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const localVotes = getLocalVotes();
-      // Clean Firestore - no auto seeding of demo data
       const loaded: Proposal[] = snapshot.docs.map(docSnap => {
         const d = docSnap.data();
         const count = d.count || 0;
@@ -180,7 +178,7 @@ export default function Home() {
       });
     } catch (e) {
       console.error(e);
-      setToast('Não conseguimos registrar seu voto. Tente novamente.');
+      setToast('Não conseguimos registrar seu apoio. Tente novamente.');
     } finally {
       setVoting(v => v.filter(id => id !== p.id));
     }
@@ -193,7 +191,7 @@ export default function Home() {
           <button
             key={direction}
             className={`vote-button ${direction === 1 ? 'positive' : 'negative'} ${p.myVote === direction ? 'chosen' : ''}`}
-            aria-label={`${direction === 1 ? 'Votar a favor de' : 'Votar contra'} ${p.title}`}
+            aria-label={`${direction === 1 ? 'Apoiar ideia' : 'Não apoiar'} ${p.title}`}
             aria-pressed={p.myVote === direction}
             disabled={voting.includes(p.id)}
             onClick={() => vote(p, direction)}
@@ -218,10 +216,10 @@ export default function Home() {
     else if (residentName.length < 2) errs.residentName = 'Nome muito curto (mínimo 2 letras).';
     if (!block) errs.block = 'Informe o bloco.';
     if (!apartment) errs.apartment = 'Informe o apartamento.';
-    if (!title.trim()) errs.title = 'Escreva o título da pauta.';
+    if (!title.trim()) errs.title = 'Escreva o título da ideia.';
     else if (title.trim().length < 4) errs.title = 'Título com pelo menos 4 caracteres.';
     else if (title.trim().length > 30) errs.title = 'Máximo de 30 caracteres.';
-    if (!description.trim()) errs.description = 'Conte um pouco mais sobre sua ideia.';
+    if (!description.trim()) errs.description = 'Conte um pouco mais sobre sua sugestão.';
     else if (description.trim().length < 10) errs.description = 'Descreva com pelo menos 10 caracteres.';
 
     if (Object.keys(errs).length > 0) {
@@ -257,7 +255,7 @@ export default function Home() {
       setModal('success');
     } catch (e) {
       console.error(e);
-      setError('Não foi possível publicar. Sua ideia continua aqui. Tente novamente.');
+      setError('Não foi possível enviar a ideia. Tente novamente em instantes.');
     } finally {
       setBusy(false);
     }
@@ -268,7 +266,7 @@ export default function Home() {
 
   return (
     <>
-      <a href="#pautas" className="skip-link">Pular para as pautas</a>
+      <a href="#ideias" className="skip-link">Pular para as ideias</a>
       <header className="header">
         <div className="header-inner">
           <a className="brand" href="/" aria-label="Nossa Assembleia, início">
@@ -281,7 +279,7 @@ export default function Home() {
             <span>{condoName}</span>
           </div>
           <div className="header-actions">
-            <button className="icon-button help-button" aria-label="Como funciona" onClick={() => open('about')}>
+            <button className="icon-button help-button" aria-label="Como funciona o mural" onClick={() => open('about')}>
               <CircleHelp size={21}/>
             </button>
           </div>
@@ -290,31 +288,31 @@ export default function Home() {
 
       <main className="main">
         <div className="content-grid">
-          <section id="pautas" className="feed" aria-labelledby="feed-title">
+          <section id="ideias" className="feed" aria-labelledby="feed-title">
             <div className="feed-heading">
-              <div><h1 id="feed-title">O que é prioridade?</h1></div>
+              <div><h1 id="feed-title">Mural de Melhorias</h1></div>
             </div>
 
-            <section className="mini-explainer" aria-label="Como participar">
+            <section className="mini-explainer" aria-label="Objetivo do mural">
               <Mascot small/>
               <div>
-                <h2>Sua ideia pode virar uma boa mudança.</h2>
-                <p>Sugira uma pauta, vote nas ideias dos vizinhos e veja as prioridades da nossa comunidade.</p>
+                <h2>Espaço de escuta e ideias para o condomínio</h2>
+                <p>Compartilhe melhorias e apoie sugestões dos vizinhos. A administração acompanha este mural para entender as prioridades e necessidades reais dos moradores.</p>
               </div>
             </section>
 
             <div className="compact-filters">
               <label>
-                <span className="sr-only">Ordenar pautas</span>
-                <select aria-label="Ordenar pautas" value={filter} onChange={e => changeFilter(e.target.value)}>
-                  <option value="popular">Mais votadas</option>
+                <span className="sr-only">Ordenar ideias</span>
+                <select aria-label="Ordenar ideias" value={filter} onChange={e => changeFilter(e.target.value)}>
+                  <option value="popular">Mais apoiadas</option>
                   <option value="recent">Recentes</option>
-                  <option value="mine">Minhas pautas</option>
+                  <option value="mine">Minhas sugestões</option>
                 </select>
               </label>
               <label className="compact-search">
                 <Search size={17}/>
-                <input aria-label="Buscar pautas" placeholder="Buscar" value={query} onChange={e => setQuery(e.target.value)}/>
+                <input aria-label="Buscar sugestões" placeholder="Buscar" value={query} onChange={e => setQuery(e.target.value)}/>
               </label>
             </div>
 
@@ -332,10 +330,10 @@ export default function Home() {
             ) : shown.length === 0 ? (
               <div className="empty">
                 <Lightbulb size={35}/>
-                <h3>{query || category !== 'Todas' ? 'Nenhuma ideia encontrada' : filter === 'mine' ? 'Qual vai ser sua primeira ideia?' : 'O mural começa com uma ideia'}</h3>
+                <h3>{query || category !== 'Todas' ? 'Nenhuma sugestão encontrada' : filter === 'mine' ? 'Qual vai ser sua primeira sugestão?' : 'O mural começa com uma boa ideia'}</h3>
                 <p>{query || category !== 'Todas' ? 'Tente outra palavra ou escolha todas as categorias.' : 'Compartilhe algo que pode melhorar o dia a dia por aqui.'}</p>
                 <button className="button secondary" onClick={() => query || category !== 'Todas' ? (setQuery(''), setCategory('Todas')) : open('new')}>
-                  {query || category !== 'Todas' ? 'Limpar filtros' : 'Sugerir uma pauta'}
+                  {query || category !== 'Todas' ? 'Limpar filtros' : 'Sugerir melhoria'}
                 </button>
               </div>
             ) : (
@@ -345,11 +343,11 @@ export default function Home() {
                     <div className="card-top">
                       <span className="rank-label">{filter === 'popular' ? `${index + 1}º` : p.category}</span>
                       {isNewProposal(p.createdAt, now) && (
-                        <span className="new-badge" title="Publicada há menos de uma hora" aria-label="Pauta nova">
+                        <span className="new-badge" title="Publicada há menos de uma hora" aria-label="Ideia nova">
                           <Sparkles size={13}/><span>NOVA</span>
                         </span>
                       )}
-                      <span className="score" title="Votos positivos menos negativos">{p.rank > 0 ? '+' : ''}{p.rank}</span>
+                      <span className="score" title="Saldo de apoios">{p.rank > 0 ? '+' : ''}{p.rank}</span>
                     </div>
                     <button className="card-body" onClick={() => { setError(''); setSelected(p.id); }}>
                       <h3>{p.title}</h3>
@@ -366,13 +364,13 @@ export default function Home() {
 
       <div className="mobile-cta">
         <button className="button primary pulse-focus" onClick={() => open('new')}>
-          <Plus size={24}/> Sugerir pauta
+          <Plus size={24}/> Sugerir melhoria
         </button>
       </div>
 
       {modal === 'new' && (
-        <Modal title="Qual é a sua ideia?" close={close}>
-          <p className="dialog-intro">Uma sugestão simples pode melhorar o dia de muita gente.</p>
+        <Modal title="Qual é a sua sugestão?" close={close}>
+          <p className="dialog-intro">Sua ideia será analisada pela administração para entender o que pode melhorar no condomínio.</p>
           <form onSubmit={publish} noValidate>
             <fieldset className="resident-fields">
               <legend>Quem está sugerindo?</legend>
@@ -416,7 +414,7 @@ export default function Home() {
             </fieldset>
 
             <label className="field">
-              Título da pauta
+              Título da melhoria
               <input
                 maxLength={30}
                 placeholder="Ex.: Mais iluminação"
@@ -459,21 +457,21 @@ export default function Home() {
 
             <button className="button primary full" disabled={busy}>
               {busy ? <LoaderCircle className="spin" size={18}/> : <Plus size={18}/>}
-              {busy ? 'Publicando...' : 'Publicar ideia'}
+              {busy ? 'Enviando sugestão...' : 'Enviar sugestão'}
             </button>
-            <p className="form-footnote">Sua ideia ficará visível para os moradores.</p>
+            <p className="form-footnote">Sua ideia ficará visível para os moradores e para a administração.</p>
           </form>
         </Modal>
       )}
 
       {modal === 'success' && (
-        <Modal title="Ideia Enviada!" close={close}>
+        <Modal title="Sugestão Enviada!" close={close}>
           <div className="success-card">
             <div className="success-icon-badge">
               <PartyPopper size={36}/>
             </div>
-            <h3>Parabéns! Pauta criada</h3>
-            <p>Sua sugestão já foi publicada e todos os vizinhos já podem visualizar e votar!</p>
+            <h3>Obrigado pela colaboração!</h3>
+            <p>Sua sugestão já está no mural. Os vizinhos podem manifestar apoio e a administração vai acompanhar a demanda da comunidade!</p>
             <button className="button primary full" onClick={close} style={{ marginTop: 10 }}>
               Ver no mural
             </button>
@@ -482,7 +480,7 @@ export default function Home() {
       )}
 
       {detail && (
-        <Modal title="Uma ideia para o condomínio" close={close}>
+        <Modal title="Detalhes da Sugestão" close={close}>
           <div className="detail-heading">
             <span className="category-tag">{detail.category}</span>
           </div>
@@ -496,16 +494,16 @@ export default function Home() {
       )}
 
       {modal === 'about' && (
-        <Modal title="Como funciona" close={close}>
+        <Modal title="Sobre o Mural de Ideias" close={close}>
           <div className="about-mascot"><Mascot small/></div>
-          <p className="dialog-intro">Este é o mural de ideias do nosso condomínio. Um espaço aberto para organizar melhorias que fazem diferença.</p>
+          <p className="dialog-intro">Este é um canal aberto e colaborativo de sugestões de melhorias para o nosso condomínio.</p>
           <div className="about-points">
-            <p><Lightbulb size={20}/><span><strong>Sugira uma melhoria.</strong> Conte o que pode ser feito e como isso ajuda o condomínio.</span></p>
-            <p><Heart size={20}/><span><strong>Vote nas pautas.</strong> Apoie com positivo ou negativo. As ideias ficam sempre abertas para participação.</span></p>
-            <p><Users size={20}/><span><strong>Avaliação da administração.</strong> Todas as pautas sugeridas pelos moradores serão avaliadas pela administração do condomínio.</span></p>
+            <p><Lightbulb size={20}/><span><strong>Compartilhe sua ideia.</strong> Sugira melhorias para o convívio, manutenção, segurança e áreas comuns.</span></p>
+            <p><Heart size={20}/><span><strong>Demonstre apoio.</strong> Indique com 👍 ou 👎 quais sugestões você considera prioritárias para o prédio.</span></p>
+            <p><Users size={20}/><span><strong>Acompanhamento da Administração.</strong> Não se trata de uma votação deliberativa, mas de um termômetro para a administração entender as reais necessidades e prioridades dos moradores.</span></p>
           </div>
           <div className="admin-note">
-            <p>O mural serve para ouvir os moradores e levar as necessidades reais para alinhamento e assembleia.</p>
+            <p>💡 As pautas levantadas servem de insumo para estudo de viabilidade, planejamento e futuras pautas de assembleia.</p>
           </div>
         </Modal>
       )}
