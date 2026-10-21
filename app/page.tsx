@@ -94,21 +94,7 @@ export default function Home() {
     const q = firestoreQuery(collection(db, 'proposals'), orderBy('createdAt', 'desc'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const localVotes = getLocalVotes();
-      if (snapshot.empty) {
-        demoProposals.forEach(p => {
-          setDoc(doc(db, 'proposals', p.id), {
-            title: p.title,
-            description: p.description,
-            category: p.category,
-            status: 'open',
-            author: p.author,
-            createdAt: p.createdAt,
-            count: p.count,
-            down: p.down || 0,
-            note: p.note || ''
-          }, { merge: true });
-        });
-      }
+      // Clean Firestore - no auto seeding of demo data
       const loaded: Proposal[] = snapshot.docs.map(docSnap => {
         const d = docSnap.data();
         const count = d.count || 0;
