@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import { ThumbsUp, ThumbsDown, Building2, CircleHelp, Lightbulb, LoaderCircle, Plus, Search, Sparkles, X, Heart, Users, PartyPopper } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, Building2, CircleHelp, Lightbulb, LoaderCircle, Plus, Search, Sparkles, X, Heart, Users, PartyPopper, Trophy, Medal } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, doc, onSnapshot, setDoc, updateDoc, increment, query as firestoreQuery, orderBy } from 'firebase/firestore';
 import { categories, statuses, visibleProposals, isNewProposal } from '@/lib/domain.mjs';
@@ -337,24 +337,45 @@ export default function Home() {
               </div>
             ) : (
               <div className="cards">
-                {shown.map((p: Proposal, index: number) => (
-                  <article className={`card ${p.myVote === 1 ? 'is-supported' : ''} ${isNewProposal(p.createdAt, now) ? 'is-new' : ''}`} key={p.id}>
-                    <div className="card-top">
-                      <span className="rank-label">{filter === 'popular' ? `${index + 1}º` : p.category}</span>
-                      {isNewProposal(p.createdAt, now) && (
-                        <span className="new-badge" title="Publicada há menos de uma hora" aria-label="Ideia nova">
-                          <Sparkles size={13}/><span>NOVA</span>
-                        </span>
-                      )}
-                      <span className="score" title="Saldo de apoios">{p.rank > 0 ? '+' : ''}{p.rank}</span>
-                    </div>
-                    <button className="card-body" onClick={() => { setError(''); setSelected(p.id); }}>
-                      <h3>{p.title}</h3>
-                      <p>{p.description}</p>
-                    </button>
-                    {voteButtons(p)}
-                  </article>
-                ))}
+                {shown.map((p: Proposal, index: number) => {
+                  const isTop1 = filter === 'popular' && index === 0;
+                  const isTop2 = filter === 'popular' && index === 1;
+                  const isTop3 = filter === 'popular' && index === 2;
+                  const podiumClass = isTop1 ? 'podium-gold' : isTop2 ? 'podium-silver' : isTop3 ? 'podium-bronze' : '';
+
+                  return (
+                    <article className={`card ${podiumClass} ${p.myVote === 1 ? 'is-supported' : ''} ${isNewProposal(p.createdAt, now) ? 'is-new' : ''}`} key={p.id}>
+                      <div className="card-top">
+                        {isTop1 ? (
+                          <span className="podium-badge gold" title="1º Lugar mais apoiado">
+                            <Trophy size={13}/> 1º Lugar
+                          </span>
+                        ) : isTop2 ? (
+                          <span className="podium-badge silver" title="2º Lugar mais apoiado">
+                            <Medal size={13}/> 2º Lugar
+                          </span>
+                        ) : isTop3 ? (
+                          <span className="podium-badge bronze" title="3º Lugar mais apoiado">
+                            <Medal size={13}/> 3º Lugar
+                          </span>
+                        ) : (
+                          <span className="rank-label">{filter === 'popular' ? `${index + 1}º` : p.category}</span>
+                        )}
+                        {isNewProposal(p.createdAt, now) && (
+                          <span className="new-badge" title="Publicada há menos de uma hora" aria-label="Ideia nova">
+                            <Sparkles size={13}/><span>NOVA</span>
+                          </span>
+                        )}
+                        <span className="score" title="Saldo de apoios">{p.rank > 0 ? '+' : ''}{p.rank}</span>
+                      </div>
+                      <button className="card-body" onClick={() => { setError(''); setSelected(p.id); }}>
+                        <h3>{p.title}</h3>
+                        <p>{p.description}</p>
+                      </button>
+                      {voteButtons(p)}
+                    </article>
+                  );
+                })}
               </div>
             )}
           </section>
