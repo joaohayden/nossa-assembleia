@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import { ThumbsUp, ThumbsDown, Building2, CheckCircle2, CircleHelp, Lightbulb, LoaderCircle, Plus, Search, Sparkles, X, Heart, Users } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, Building2, CircleHelp, Lightbulb, LoaderCircle, Plus, Search, Sparkles, X, Heart, Users, CheckCircle, PartyPopper } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, doc, onSnapshot, setDoc, updateDoc, increment, query as firestoreQuery, orderBy } from 'firebase/firestore';
 import { demoProposals } from '@/lib/demo';
@@ -62,7 +62,7 @@ export default function Home() {
   const [filter, setFilter] = useState('popular');
   const [category, setCategory] = useState('Todas');
   const [query, setQuery] = useState('');
-  const [modal, setModal] = useState<'new' | 'about' | null>(null);
+  const [modal, setModal] = useState<'new' | 'about' | 'success' | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [toast, setToast] = useState('');
   const [error, setError] = useState('');
@@ -73,7 +73,6 @@ export default function Home() {
   const [description, setDescription] = useState('');
   const [newCategory, setNewCategory] = useState('Áreas comuns');
 
-  const notify = (message: string) => setToast(message);
   const close = () => { if (!busy) { setModal(null); setSelected(null); setError(''); setFieldErrors({}); } };
   const open = (value: typeof modal) => { setError(''); setFieldErrors({}); setModal(value); };
 
@@ -101,7 +100,7 @@ export default function Home() {
             title: p.title,
             description: p.description,
             category: p.category,
-            status: p.status,
+            status: 'open',
             author: p.author,
             createdAt: p.createdAt,
             count: p.count,
@@ -120,7 +119,7 @@ export default function Home() {
           title: d.title || '',
           description: d.description || '',
           category: d.category || 'Áreas comuns',
-          status: d.status || 'open',
+          status: 'open',
           author: d.author || 'Morador',
           apartment: d.apartment,
           block: d.block,
@@ -174,7 +173,7 @@ export default function Home() {
   };
 
   async function vote(p: Proposal, direction: 1 | -1) {
-    if (voting.includes(p.id) || p.status === 'done' || p.status === 'archived') return;
+    if (voting.includes(p.id)) return;
     setVoting(v => [...v, p.id]);
     try {
       const prevVote = p.myVote || 0;
@@ -195,7 +194,7 @@ export default function Home() {
       });
     } catch (e) {
       console.error(e);
-      notify('Não conseguimos registrar seu voto. Tente novamente.');
+      setToast('Não conseguimos registrar seu voto. Tente novamente.');
     } finally {
       setVoting(v => v.filter(id => id !== p.id));
     }
@@ -210,7 +209,7 @@ export default function Home() {
             className={`vote-button ${direction === 1 ? 'positive' : 'negative'} ${p.myVote === direction ? 'chosen' : ''}`}
             aria-label={`${direction === 1 ? 'Votar a favor de' : 'Votar contra'} ${p.title}`}
             aria-pressed={p.myVote === direction}
-            disabled={voting.includes(p.id) || p.status === 'done' || p.status === 'archived'}
+            disabled={voting.includes(p.id)}
             onClick={() => vote(p, direction)}
           >
             {direction === 1 ? <ThumbsUp size={20}/> : <ThumbsDown size={20}/>}
@@ -225,14 +224,14 @@ export default function Home() {
     e.preventDefault();
     const fields = new FormData(e.currentTarget);
     const residentName = String(fields.get('residentName') || '').trim();
-    const apartment = String(fields.get('apartment') || '').trim();
     const block = String(fields.get('block') || '').trim();
+    const apartment = String(fields.get('apartment') || '').trim();
 
     const errs: Record<string, string> = {};
     if (!residentName) errs.residentName = 'Informe o seu nome.';
     else if (residentName.length < 2) errs.residentName = 'Nome muito curto (mínimo 2 letras).';
-    if (!apartment) errs.apartment = 'Informe o apartamento.';
     if (!block) errs.block = 'Informe o bloco.';
+    if (!apartment) errs.apartment = 'Informe o apartamento.';
     if (!title.trim()) errs.title = 'Escreva o título da pauta.';
     else if (title.trim().length < 4) errs.title = 'Título com pelo menos 4 caracteres.';
     else if (title.trim().length > 30) errs.title = 'Máximo de 30 caracteres.';
@@ -256,21 +255,20 @@ export default function Home() {
         category: newCategory,
         status: 'open',
         author: residentName,
-        apartment,
         block,
+        apartment,
         authorId: userId,
         createdAt: new Date().toISOString(),
         count: 0,
         down: 0,
         note: ''
       });
-      setModal(null);
       setTitle('');
       setDescription('');
       setCategory('Todas');
       setQuery('');
       setFilter('popular');
-      notify('Ideia publicada! Agora os vizinhos podem votar.');
+      setModal('success');
     } catch (e) {
       console.error(e);
       setError('Não foi possível publicar. Sua ideia continua aqui. Tente novamente.');
@@ -315,7 +313,7 @@ export default function Home() {
               <Mascot small/>
               <div>
                 <h2>Sua ideia pode virar uma boa mudança.</h2>
-                <p>Sugira uma pauta, vote nas ideias dos vizinhos e veja as mais votadas subirem.</p>
+                <p>Sugira uma pauta, vote nas ideias dos vizinhos e veja as prioridades da nossa comunidade.</p>
               </div>
             </section>
 
@@ -325,7 +323,6 @@ export default function Home() {
                 <select aria-label="Ordenar pautas" value={filter} onChange={e => changeFilter(e.target.value)}>
                   <option value="popular">Mais votadas</option>
                   <option value="recent">Recentes</option>
-                  <option value="assembly">Na assembleia</option>
                   <option value="mine">Minhas pautas</option>
                 </select>
               </label>
@@ -349,8 +346,8 @@ export default function Home() {
             ) : shown.length === 0 ? (
               <div className="empty">
                 <Lightbulb size={35}/>
-                <h3>{query || category !== 'Todas' ? 'Nenhuma ideia encontrada' : filter === 'assembly' ? 'As próximas pautas aparecem aqui' : filter === 'mine' ? 'Qual vai ser sua primeira ideia?' : 'O mural começa com uma ideia'}</h3>
-                <p>{query || category !== 'Todas' ? 'Tente outra palavra ou escolha todas as categorias.' : filter === 'assembly' ? 'A administração ainda não selecionou pautas para a assembleia.' : 'Compartilhe algo que pode melhorar o dia a dia por aqui.'}</p>
+                <h3>{query || category !== 'Todas' ? 'Nenhuma ideia encontrada' : filter === 'mine' ? 'Qual vai ser sua primeira ideia?' : 'O mural começa com uma ideia'}</h3>
+                <p>{query || category !== 'Todas' ? 'Tente outra palavra ou escolha todas as categorias.' : 'Compartilhe algo que pode melhorar o dia a dia por aqui.'}</p>
                 <button className="button secondary" onClick={() => query || category !== 'Todas' ? (setQuery(''), setCategory('Todas')) : open('new')}>
                   {query || category !== 'Todas' ? 'Limpar filtros' : 'Sugerir uma pauta'}
                 </button>
@@ -372,7 +369,6 @@ export default function Home() {
                       <h3>{p.title}</h3>
                       <p>{p.description}</p>
                     </button>
-                    {p.status !== 'open' && <span className={`status status-${p.status}`}>{statuses[p.status]}</span>}
                     {voteButtons(p)}
                   </article>
                 ))}
@@ -386,10 +382,6 @@ export default function Home() {
         <button className="button primary pulse-focus" onClick={() => open('new')}>
           <Plus size={24}/> Sugerir pauta
         </button>
-      </div>
-
-      <div className={`toast ${toast ? 'visible' : ''}`} role="status" aria-live="polite">
-        {toast && <><CheckCircle2 size={18}/>{toast}</>}
       </div>
 
       {modal === 'new' && (
@@ -413,17 +405,6 @@ export default function Home() {
               </label>
               <div className="unit-fields">
                 <label className="field">
-                  Apartamento
-                  <input
-                    name="apartment"
-                    maxLength={20}
-                    placeholder="Ex.: 204"
-                    className={fieldErrors.apartment ? 'has-error' : ''}
-                    onChange={() => setFieldErrors(prev => ({ ...prev, apartment: '' }))}
-                  />
-                  {fieldErrors.apartment && <span className="field-error-text">{fieldErrors.apartment}</span>}
-                </label>
-                <label className="field">
                   Bloco
                   <input
                     name="block"
@@ -434,13 +415,23 @@ export default function Home() {
                   />
                   {fieldErrors.block && <span className="field-error-text">{fieldErrors.block}</span>}
                 </label>
+                <label className="field">
+                  Apartamento
+                  <input
+                    name="apartment"
+                    maxLength={20}
+                    placeholder="Ex.: 204"
+                    className={fieldErrors.apartment ? 'has-error' : ''}
+                    onChange={() => setFieldErrors(prev => ({ ...prev, apartment: '' }))}
+                  />
+                  {fieldErrors.apartment && <span className="field-error-text">{fieldErrors.apartment}</span>}
+                </label>
               </div>
             </fieldset>
 
             <label className="field">
               Título da pauta
               <input
-                autoFocus
                 maxLength={30}
                 placeholder="Ex.: Mais iluminação"
                 value={title}
@@ -489,15 +480,29 @@ export default function Home() {
         </Modal>
       )}
 
+      {modal === 'success' && (
+        <Modal title="Ideia Enviada!" close={close}>
+          <div className="success-card">
+            <div className="success-icon-badge">
+              <PartyPopper size={36}/>
+            </div>
+            <h3>Parabéns! Pauta criada</h3>
+            <p>Sua sugestão já foi publicada e todos os vizinhos já podem visualizar e votar!</p>
+            <button className="button primary full" onClick={close} style={{ marginTop: 10 }}>
+              Ver no mural
+            </button>
+          </div>
+        </Modal>
+      )}
+
       {detail && (
         <Modal title="Uma ideia para o condomínio" close={close}>
           <div className="detail-heading">
             <span className="category-tag">{detail.category}</span>
-            <span className={`status status-${detail.status}`}>{statuses[detail.status]}</span>
           </div>
           <h3 className="detail-title">{detail.title}</h3>
           <p className="detail-author">
-            Sugerida por {detail.author}{detail.apartment && detail.block ? ` · Apto ${detail.apartment} · Bloco ${detail.block}` : ''} · {new Date(detail.createdAt).toLocaleDateString('pt-BR')}
+            Sugerida por {detail.author}{detail.block && detail.apartment ? ` · Bloco ${detail.block} · Apto ${detail.apartment}` : ''} · {new Date(detail.createdAt).toLocaleDateString('pt-BR')}
           </p>
           <p className="detail-description">{detail.description}</p>
           {voteButtons(detail)}
@@ -507,14 +512,14 @@ export default function Home() {
       {modal === 'about' && (
         <Modal title="Como funciona" close={close}>
           <div className="about-mascot"><Mascot small/></div>
-          <p className="dialog-intro">Este é o mural de ideias do seu condomínio. Um lugar para transformar sugestões em conversas que fazem diferença.</p>
+          <p className="dialog-intro">Este é o mural de ideias do nosso condomínio. Um espaço aberto para organizar melhorias que fazem diferença.</p>
           <div className="about-points">
-            <p><Lightbulb size={20}/><span><strong>Sugira uma melhoria.</strong> Explique o que pode mudar e como isso ajuda a comunidade.</span></p>
-            <p><Heart size={20}/><span><strong>Vote nas pautas.</strong> Use positivo ou negativo. Toque de novo para retirar o voto. O ranking usa positivos menos negativos.</span></p>
-            <p><Users size={20}/><span><strong>Acompanhe os próximos passos.</strong> As mais votadas são levadas para a assembleia.</span></p>
+            <p><Lightbulb size={20}/><span><strong>Sugira uma melhoria.</strong> Conte o que pode ser feito e como isso ajuda o condomínio.</span></p>
+            <p><Heart size={20}/><span><strong>Vote nas pautas.</strong> Apoie com positivo ou negativo. As ideias ficam sempre abertas para participação.</span></p>
+            <p><Users size={20}/><span><strong>Avaliação da administração.</strong> Todas as pautas sugeridas pelos moradores serão avaliadas pela administração do condomínio.</span></p>
           </div>
           <div className="admin-note">
-            <p>Os votos mostram o interesse real dos moradores e ajudam a organizar a pauta da assembleia.</p>
+            <p>O mural serve para ouvir os moradores e levar as necessidades reais para alinhamento e assembleia.</p>
           </div>
         </Modal>
       )}

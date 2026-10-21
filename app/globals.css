@@ -54,3 +54,66 @@
   background-color: #fff8f8 !important;
   outline-color: #ef4444 !important;
 }
+
+
+/* Modal responsiveness for mobile virtual keyboards */
+.dialog {
+  display: flex;
+  flex-direction: column;
+  max-height: 88dvh !important;
+  overflow: hidden !important;
+  padding: 20px 20px 16px !important;
+}
+.dialog-head {
+  flex-shrink: 0;
+}
+.dialog form {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 4px;
+  flex: 1;
+}
+
+/* Success Celebration Animation */
+@keyframes successPop {
+  0% { transform: scale(0.6) rotate(-10deg); opacity: 0; }
+  60% { transform: scale(1.1) rotate(4deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes sparkleFloat {
+  0% { transform: translateY(0) scale(0.8); opacity: 0.6; }
+  50% { transform: translateY(-8px) scale(1.2); opacity: 1; }
+  100% { transform: translateY(0) scale(0.8); opacity: 0.6; }
+}
+.success-card {
+  text-align: center;
+  padding: 30px 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  animation: successPop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.success-icon-badge {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #d8f5a2;
+  color: #386d1a;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 24px rgba(97, 163, 49, 0.3);
+  animation: sparkleFloat 2.2s infinite ease-in-out;
+}
+.success-card h3 {
+  font: 500 24px/1.2 var(--font-display);
+  color: #2b4c1c;
+  margin: 0;
+}
+.success-card p {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #55664d;
+  max-width: 340px;
+  margin: 0;
+}
