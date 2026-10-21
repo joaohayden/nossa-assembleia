@@ -117,3 +117,57 @@
   max-width: 340px;
   margin: 0;
 }
+
+
+/* Top notice banner */
+.top-notice-bar {
+  background: #f1f8e9;
+  border-bottom: 1px solid #dbead0;
+  color: #406028;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  line-height: 1.4;
+}
+.header-centered {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  position: relative !important;
+  width: 100% !important;
+}
+.brand-single-line {
+  white-space: nowrap !important;
+  font-size: 26px !important;
+  letter-spacing: -0.5px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 auto !important;
+}
+.brand-single-line .brand-name {
+  line-height: 1 !important;
+}
+.header-help-absolute {
+  position: absolute !important;
+  right: 16px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+@media (max-width: 600px) {
+  .top-notice-bar {
+    font-size: 11px;
+    padding: 7px 12px;
+  }
+  .brand-single-line {
+    font-size: 22px !important;
+  }
+  .header-help-absolute {
+    right: 8px !important;
+  }
+}

@@ -267,13 +267,16 @@ export default function Home() {
   return (
     <>
       <a href="#ideias" className="skip-link">Pular para as ideias</a>
+      <div className="top-notice-bar" role="region" aria-label="Aviso informativo">
+        <span>💡 <strong>Mural colaborativo:</strong> o apoio às ideias ajuda a administração a entender as prioridades dos moradores.</span>
+      </div>
       <header className="header">
-        <div className="header-inner">
-          <a className="brand" href="/" aria-label="Realize Ajuricaba, início">
+        <div className="header-inner header-centered">
+          <a className="brand brand-single-line" href="/" aria-label="Realize Ajuricaba, início">
             <span className="brand-icon"><Building2 size={24} strokeWidth={2.5}/></span>
-            <span className="brand-name">realize<br/>ajuricaba</span>
+            <span className="brand-name">realize ajuricaba</span>
           </a>
-          <div className="header-actions">
+          <div className="header-actions header-help-absolute">
             <button className="icon-button help-button" aria-label="Como funciona o mural" onClick={() => open('about')}>
               <CircleHelp size={21}/>
             </button>
