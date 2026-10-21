@@ -285,7 +285,7 @@ export default function Home() {
         <div className="content-grid">
           <section id="ideias" className="feed" aria-labelledby="feed-title">
             <div className="feed-heading">
-              <div><h1 id="feed-title">Mural de Melhorias</h1></div>
+              <div><h1 id="feed-title">Mural de Ideias</h1></div>
             </div>
 
             <section className="mini-explainer" aria-label="Objetivo do mural">
