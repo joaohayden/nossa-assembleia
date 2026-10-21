@@ -7,8 +7,8 @@ const fredoka = Fredoka({ subsets: ['latin'], variable: '--font-display', displa
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nossaassembleia.vercel.app'),
-  title: 'Nossa Assembleia · Mural de Pautas',
-  description: 'Participe, vote nas ideias dos vizinhos e sugira melhorias para o condomínio.',
+  title: 'Realize Ajuricaba · Mural de Ideias',
+  description: 'Sua ideia pode ajudar a construir um condomínio melhor. Compartilhe e apoie melhorias para o condomínio.',
   icons: {
     icon: [
       { url: '/icon.svg', type: 'image/svg+xml' },
@@ -19,24 +19,24 @@ export const metadata: Metadata = {
     apple: '/icon.png'
   },
   openGraph: {
-    title: 'Nossa Assembleia · Mural de Pautas',
-    description: 'Participe, vote nas ideias dos vizinhos e sugira melhorias para o condomínio.',
+    title: 'Realize Ajuricaba · Mural de Ideias',
+    description: 'Sua ideia pode ajudar a construir um condomínio melhor. Compartilhe e apoie melhorias para o condomínio.',
     url: 'https://nossaassembleia.vercel.app',
-    siteName: 'Nossa Assembleia',
+    siteName: 'Realize Ajuricaba',
     images: [
       {
         url: '/icon.png',
         width: 180,
         height: 180,
-        alt: 'Mascote Nossa Assembleia'
+        alt: 'Mascote Realize Ajuricaba'
       }
     ],
     type: 'website'
   },
   twitter: {
     card: 'summary',
-    title: 'Nossa Assembleia · Mural de Pautas',
-    description: 'Participe, vote nas ideias dos vizinhos e sugira melhorias para o condomínio.',
+    title: 'Realize Ajuricaba · Mural de Ideias',
+    description: 'Sua ideia pode ajudar a construir um condomínio melhor. Compartilhe e apoie melhorias para o condomínio.',
     images: ['/icon.png']
   }
 };

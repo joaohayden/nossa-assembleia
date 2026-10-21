@@ -269,15 +269,10 @@ export default function Home() {
       <a href="#ideias" className="skip-link">Pular para as ideias</a>
       <header className="header">
         <div className="header-inner">
-          <a className="brand" href="/" aria-label="Nossa Assembleia, início">
+          <a className="brand" href="/" aria-label="Realize Ajuricaba, início">
             <span className="brand-icon"><Building2 size={24} strokeWidth={2.5}/></span>
-            <span className="brand-name">nossa<br/>assembleia</span>
+            <span className="brand-name">realize<br/>ajuricaba</span>
           </a>
-          <div className="condo">
-            <span className="condo-divider"/>
-            <Building2 size={15}/>
-            <span>{condoName}</span>
-          </div>
           <div className="header-actions">
             <button className="icon-button help-button" aria-label="Como funciona o mural" onClick={() => open('about')}>
               <CircleHelp size={21}/>
@@ -296,7 +291,7 @@ export default function Home() {
             <section className="mini-explainer" aria-label="Objetivo do mural">
               <Mascot small/>
               <div>
-                <h2>Espaço de escuta e ideias para o condomínio</h2>
+                <h2>Sua ideia pode ajudar a construir um condomínio melhor</h2>
                 <p>Compartilhe melhorias e apoie sugestões dos vizinhos. A administração acompanha este mural para entender as prioridades e necessidades reais dos moradores.</p>
               </div>
             </section>
