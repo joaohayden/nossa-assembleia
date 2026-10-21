@@ -267,9 +267,6 @@ export default function Home() {
   return (
     <>
       <a href="#ideias" className="skip-link">Pular para as ideias</a>
-      <div className="top-notice-bar" role="region" aria-label="Aviso informativo">
-        <span>💡 <strong>Mural colaborativo:</strong> o apoio às ideias ajuda a administração a entender as prioridades dos moradores.</span>
-      </div>
       <header className="header">
         <div className="header-inner header-centered">
           <a className="brand brand-single-line" href="/" aria-label="Realize Ajuricaba, início">
@@ -295,9 +292,13 @@ export default function Home() {
               <Mascot small/>
               <div>
                 <h2>Sua ideia pode ajudar a construir um condomínio melhor</h2>
-                <p>Compartilhe melhorias e apoie sugestões dos vizinhos. A administração acompanha este mural para entender as prioridades e necessidades reais dos moradores.</p>
+                <p>Compartilhe melhorias e apoie sugestões dos vizinhos.</p>
               </div>
             </section>
+
+            <div className="notice-card" role="note">
+              <span>💡 <strong>Mural colaborativo:</strong> o apoio às ideias ajuda a administração a entender as prioridades e necessidades reais dos moradores.</span>
+            </div>
 
             <div className="compact-filters">
               <label>

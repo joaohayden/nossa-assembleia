@@ -171,3 +171,35 @@
     right: 8px !important;
   }
 }
+
+
+/* Notice card below explainer */
+.notice-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f7fbf2;
+  border: 1px solid #dce8d3;
+  border-left: 4px solid #7cb342;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin: 0 0 16px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #435b33;
+}
+.notice-card strong {
+  color: #2e4c1e;
+}
+.notice-card svg {
+  flex-shrink: 0;
+  color: #689f38;
+}
+@media (max-width: 600px) {
+  .notice-card {
+    padding: 10px 14px;
+    font-size: 12px;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+}
