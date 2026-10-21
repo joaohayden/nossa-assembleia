@@ -10,8 +10,13 @@ export const metadata: Metadata = {
   title: 'Nossa Assembleia · Mural de Pautas',
   description: 'Participe, vote nas ideias dos vizinhos e sugira melhorias para o condomínio.',
   icons: {
-    icon: '/thumb.png',
-    apple: '/thumb.png'
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/favicon.ico' }
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/icon.png'
   },
   openGraph: {
     title: 'Nossa Assembleia · Mural de Pautas',
@@ -20,10 +25,10 @@ export const metadata: Metadata = {
     siteName: 'Nossa Assembleia',
     images: [
       {
-        url: '/thumb.png',
-        width: 300,
-        height: 300,
-        alt: 'Nossa Assembleia Ícone'
+        url: '/icon.png',
+        width: 180,
+        height: 180,
+        alt: 'Mascote Nossa Assembleia'
       }
     ],
     type: 'website'
@@ -32,22 +37,24 @@ export const metadata: Metadata = {
     card: 'summary',
     title: 'Nossa Assembleia · Mural de Pautas',
     description: 'Participe, vote nas ideias dos vizinhos e sugira melhorias para o condomínio.',
-    images: ['/thumb.png']
+    images: ['/icon.png']
   }
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#f8faf7'
+  themeColor: '#83c144'
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR">
       <head>
-        <link rel="icon" href="/thumb.png" sizes="any" />
-        <link rel="apple-touch-icon" href="/thumb.png" />
+        <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+        <link rel="icon" type="image/png" sizes="180x180" href="/icon.png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/icon.png" />
       </head>
       <body className={`${nunito.variable} ${fredoka.variable}`}>
         {children}
