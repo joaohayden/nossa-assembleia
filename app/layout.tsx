@@ -6,29 +6,33 @@ const nunito = Nunito({ subsets: ['latin'], variable: '--font-body', display: 's
 const fredoka = Fredoka({ subsets: ['latin'], variable: '--font-display', display: 'swap' });
 
 export const metadata: Metadata = {
-  title: 'Nossa Assembleia · Vote nas pautas',
-  description: 'Sugira pautas, vote e escolha as prioridades do nosso condomínio.',
+  metadataBase: new URL('https://nossaassembleia.vercel.app'),
+  title: 'Nossa Assembleia · Mural de Pautas',
+  description: 'Participe, vote nas ideias dos vizinhos e sugira melhorias para o condomínio.',
   icons: {
-    icon: '/icon.png',
-    apple: '/icon.png'
+    icon: '/thumb.png',
+    apple: '/thumb.png'
   },
   openGraph: {
-    title: 'Nossa Assembleia · Vote nas pautas',
-    description: 'Sugira pautas, vote e escolha as prioridades do nosso condomínio.',
+    title: 'Nossa Assembleia · Mural de Pautas',
+    description: 'Participe, vote nas ideias dos vizinhos e sugira melhorias para o condomínio.',
+    url: 'https://nossaassembleia.vercel.app',
+    siteName: 'Nossa Assembleia',
     images: [
       {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'Nossa Assembleia'
+        url: '/thumb.png',
+        width: 300,
+        height: 300,
+        alt: 'Nossa Assembleia Ícone'
       }
-    ]
+    ],
+    type: 'website'
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'Nossa Assembleia · Vote nas pautas',
-    description: 'Sugira pautas, vote e escolha as prioridades do nosso condomínio.',
-    images: ['/og-image.png']
+    card: 'summary',
+    title: 'Nossa Assembleia · Mural de Pautas',
+    description: 'Participe, vote nas ideias dos vizinhos e sugira melhorias para o condomínio.',
+    images: ['/thumb.png']
   }
 };
 
@@ -42,8 +46,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="pt-BR">
       <head>
-        <link rel="icon" href="/icon.png" sizes="any" />
-        <link rel="apple-touch-icon" href="/icon.png" />
+        <link rel="icon" href="/thumb.png" sizes="any" />
+        <link rel="apple-touch-icon" href="/thumb.png" />
       </head>
       <body className={`${nunito.variable} ${fredoka.variable}`}>
         {children}
