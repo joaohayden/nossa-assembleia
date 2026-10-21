@@ -1,8 +1,3 @@
 import type { Proposal } from './types';
-export const demoProposals: Proposal[] = [
- { id:'1', title:'Mais luz no caminho de casa', description:'O trecho entre a garagem e o bloco B fica bem escuro à noite. Que tal instalar luminárias com sensor de presença? Mais segurança para quem chega tarde e economia durante o dia.', category:'Segurança', status:'open', author:'Marina', createdAt:'2026-10-20T15:00:00Z', count:24, rank:24, down:0, myVote:0, supported:false, mine:false, note:'' },
- { id:'2', title:'Um cantinho verde para todo mundo', description:'Podemos aproveitar aquele espaço ao lado do salão para uma horta comunitária. Temperos fresquinhos e uma boa desculpa para conhecer os vizinhos! Podemos começar com vasos e um mutirão voluntário.', category:'Áreas comuns', status:'assembly', author:'Lucas', createdAt:'2026-10-19T13:00:00Z', count:19, rank:19, down:0, myVote:0, supported:false, mine:false, note:'Incluída na próxima assembleia. Vamos discutir o espaço e os cuidados com a horta.' },
- { id:'3', title:'Bicicletas com lugar certo', description:'Instalar um bicicletário coberto perto da portaria para organizar as bicicletas e liberar espaço nas áreas de passagem.', category:'Áreas comuns', status:'open', author:'Beatriz', createdAt:'2026-10-18T10:00:00Z', count:16, rank:16, down:0, myVote:0, supported:false, mine:false, note:'' },
- { id:'4', title:'Coleta seletiva mais fácil', description:'Colocar placas com exemplos do que pode ir em cada lixeira. Assim todo mundo consegue separar os resíduos sem dúvida.', category:'Convivência', status:'open', author:'Rafael', createdAt:'2026-10-20T09:00:00Z', count:12, rank:12, down:0, myVote:0, supported:false, mine:false, note:'' },
- { id:'5', title:'Revisar os brinquedos do parquinho', description:'Alguns parafusos do escorregador estão soltos e o balanço precisa de manutenção. Proponho uma revisão completa dos brinquedos.', category:'Manutenção', status:'done', author:'Camila', createdAt:'2026-10-15T09:00:00Z', count:10, rank:10, down:0, myVote:0, supported:false, mine:false, note:'Manutenção finalizada e brinquedos liberados para uso.' }
-];
+
+export const demoProposals: Proposal[] = [];
