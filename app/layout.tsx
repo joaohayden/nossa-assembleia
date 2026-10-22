@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Nunito, Fredoka } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 
 const nunito = Nunito({ subsets: ['latin'], variable: '--font-body', display: 'swap' });
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body className={`${nunito.variable} ${fredoka.variable}`}>
         {children}
+        <Analytics />
       </body>
     </html>
   );
